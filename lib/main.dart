@@ -32,15 +32,31 @@ class FirstPage extends StatelessWidget {
         title: const Text('First Page'),
       ),
       body: Center(
-        child: FilledButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const SecondPage(),
-              ),
-            );
-          },
-          child: const Text('Go to Second Page'),
+        child: Column(
+          spacing: 16,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FilledButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const SecondPage(),
+                  ),
+                );
+              },
+              child: const Text('Go to Second Page'),
+            ),
+            FilledButton.tonal(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const SecondFocusPage(),
+                  ),
+                );
+              },
+              child: const Text('Go to Second Page (FocusNode)'),
+            ),
+          ],
         ),
       ),
     );
@@ -119,6 +135,108 @@ class SecondPage extends StatelessWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Call `primaryFocus?.unfocus()`'),
+                  ),
+                );
+              },
+              child: const Text('Unfocus TextFields'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SecondFocusPage extends StatefulWidget {
+  const SecondFocusPage({super.key});
+
+  @override
+  State<SecondFocusPage> createState() => _SecondFocusPageState();
+}
+
+class _SecondFocusPageState extends State<SecondFocusPage> {
+  final FocusNode _usernameFocus = FocusNode();
+  final FocusNode _passwordFocus = FocusNode();
+
+  @override
+  void dispose() {
+    _usernameFocus.dispose();
+    _passwordFocus.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Second Page (FocusNode)'),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          spacing: 16,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: AutofillGroup(
+                onDisposeAction: AutofillContextAction.cancel,
+                child: Column(
+                  children: [
+                    TextField(
+                      focusNode: _usernameFocus,
+                      decoration: const InputDecoration(
+                        labelText: 'Username',
+                      ),
+                      autofillHints: const [
+                        AutofillHints.username,
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    TextField(
+                      focusNode: _passwordFocus,
+                      decoration: const InputDecoration(
+                        labelText: 'Password',
+                      ),
+                      autofillHints: const [
+                        AutofillHints.password,
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    FilledButton(
+                      onPressed: () {
+                        TextInput.finishAutofillContext(
+                          shouldSave: true,
+                        );
+                      },
+                      child: const Text('Submit'),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    FilledButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const ThirdPage(),
+                          ),
+                        );
+                      },
+                      child: const Text('Go to Third Page'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            FilledButton.tonal(
+              onPressed: () {
+                _usernameFocus.unfocus();
+                _passwordFocus.unfocus();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Call `_focusNode.unfocus()`'),
                   ),
                 );
               },
