@@ -56,57 +56,75 @@ class SecondPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Second Page'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: AutofillGroup(
-          onDisposeAction: AutofillContextAction.cancel,
-          child: Column(
-            children: [
-              const TextField(
-                decoration: InputDecoration(
-                  labelText: 'Username',
-                ),
-                autofillHints: [
-                  AutofillHints.username,
-                ],
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              const TextField(
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                ),
-                autofillHints: [
-                  AutofillHints.password,
-                ],
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              FilledButton(
-                onPressed: () {
-                  TextInput.finishAutofillContext(
-                    shouldSave: true,
-                  );
-                },
-                child: const Text('Submit'),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              FilledButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const ThirdPage(),
+      body: SingleChildScrollView(
+        child: Column(
+          spacing: 16,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: AutofillGroup(
+                onDisposeAction: AutofillContextAction.cancel,
+                child: Column(
+                  children: [
+                    const TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Username',
+                      ),
+                      autofillHints: [
+                        AutofillHints.username,
+                      ],
                     ),
-                  );
-                },
-                child: const Text('Go to Third Page'),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    const TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                      ),
+                      autofillHints: [
+                        AutofillHints.password,
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    FilledButton(
+                      onPressed: () {
+                        TextInput.finishAutofillContext(
+                          shouldSave: true,
+                        );
+                      },
+                      child: const Text('Submit'),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    FilledButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const ThirdPage(),
+                          ),
+                        );
+                      },
+                      child: const Text('Go to Third Page'),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
+            ),
+            FilledButton.tonal(
+              onPressed: () {
+                primaryFocus?.unfocus();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Call `primaryFocus?.unfocus()`'),
+                  ),
+                );
+              },
+              child: const Text('Unfocus TextFields'),
+            ),
+          ],
         ),
       ),
     );
